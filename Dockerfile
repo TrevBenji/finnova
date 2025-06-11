@@ -25,6 +25,10 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Set up basic .env for build (replace at runtime)
 RUN cp .env.example .env \
+&& echo "APP_KEY=base64:ZccY7I0hsEiW7IGJ6JAL9jgc/l2TySLBFXocUhPAvuc=" >> .env \
+ && echo "DB_CONNECTION=sqlite" >> .env \
+ && echo "DB_DATABASE=/tmp/laravel.db" >> .env \
+ && echo "SESSION_DRIVER=file" >> .env \
  && composer install --no-dev --optimize-autoloader \
  && php artisan key:generate \
  && php artisan config:cache || true

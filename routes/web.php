@@ -60,3 +60,10 @@ Route::middleware(['auth'])->get('/transactions', function () {
     $transactions = Transaction::with('customer')->latest()->get();
     return view('transactions', compact('transactions'));
 })->name('transactions');
+
+Route::get('/session-test', function () {
+    session(['test-session' => 'working']);
+    return session('test-session') === 'working'
+        ? '✅ Session works!'
+        : '❌ Session is broken';
+});

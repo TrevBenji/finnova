@@ -26,7 +26,10 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 # Set Laravel env and key
 ENV APP_ENV=production
-RUN cp .env.example .env && php artisan key:generate
+RUN cp .env.example .env \
+ && php artisan config:clear \
+ && php artisan key:generate \
+ && php artisan config:cache
 
 # Expose port 80
 EXPOSE 80

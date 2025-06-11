@@ -11,8 +11,11 @@ RUN a2enmod rewrite
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy Laravel files
+# Copy everything
 COPY . .
+
+# Move Laravel's public folder to Apache web root
+RUN rm -rf /var/www/html/* && cp -r /var/www/html/public/* /var/www/html/
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

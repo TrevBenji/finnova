@@ -36,6 +36,4 @@ RUN cp .env.example .env \
 # Fix storage and cache permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-RUN php artisan config:clear && php artisan cache:clear && php artisan route:clear
-
 EXPOSE 80

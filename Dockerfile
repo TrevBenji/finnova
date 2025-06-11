@@ -16,12 +16,12 @@ COPY . .
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN cp .env.example .env \
- && echo "APP_KEY=base64:placeholderkey=" >> .env \
+ && echo "APP_KEY=base64:ZccY7I0hsEiW7IGJ6JAL9jgc/l2TySLBFXocUhPAvuc=" >> .env \
  && echo "DB_CONNECTION=mysql" >> .env \
- && echo "DB_DATABASE=finnova" >> .env \
- && echo "DB_USERNAME=root" >> .env \
- && echo "DB_PASSWORD=" >> .env \
- && echo "APP_URL=http://localhost" >> .env
+ && echo "DB_DATABASE=finnova_db" >> .env \
+ && echo "DB_USERNAME=TrevBenji" >> .env \
+ && echo "DB_PASSWORD=Tr@pQueen1738" >> .env \
+ && echo "APP_URL=https://finnova.onrender.com(or the URL Render givesyou)" >> .env
 
 RUN composer install --no-dev --optimize-autoloader || true
 

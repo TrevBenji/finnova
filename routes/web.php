@@ -9,7 +9,12 @@ Route::middleware(['auth', 'role:admin'])->post('/system-settings', [SettingsCon
 Route::get('/', function () {
     return view('home'); // or 'landing' or whatever your hompage fileis called
 });
-
+// Dashboard Route for Authenticated Users
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

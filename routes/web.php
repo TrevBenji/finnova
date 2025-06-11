@@ -7,7 +7,7 @@ use App\Http\Controllers\SettingsController;
 Route::middleware(['auth', 'role:admin'])->post('/system-settings', [SettingsController::class, 'update'])->name('settings.update');
 
 Route::get('/', function () {
-    return view('home');
+    return view('home'); // or 'landing' or whatever your hompage fileis called
 });
 
 Route::get('/dashboard', function () {

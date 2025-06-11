@@ -7,7 +7,7 @@ use App\Http\Controllers\SettingsController;
 Route::middleware(['auth', 'role:admin'])->post('/system-settings', [SettingsController::class, 'update'])->name('settings.update');
 
 Route::get('/', function () {
-    return view('home'); // or 'landing' or whatever your hompage fileis called
+    return view('home'); // or 'landing' or whatever your hompage file is called
 });
 // Dashboard Route for Authenticated Users
 Route::middleware(['auth'])->group(function () {
@@ -15,9 +15,6 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 });
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/get-started', function () {
     return view('get-started');

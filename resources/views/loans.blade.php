@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loans | FinNova</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Fonts & Bootstrap -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #0d0d1f;
+            font-family: 'Orbitron', sans-serif;
+            color: #f1f1f1;
+        }
+
+        .container-box {
+            max-width: 1000px;
+            margin: 80px auto;
+            background: #1a1a2e;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px #0ff5;
+        }
+
+        h2 {
+            color: #0ff;
+            text-shadow: 0 0 10px #0ff;
+        }
+
+        .neon-btn {
+            background: transparent;
+            color: #0ff;
+            border: 2px solid #0ff;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+
+        .neon-btn:hover {
+            background-color: #0ff;
+            color: #000;
+            box-shadow: 0 0 12px #0ff, 0 0 24px #0ff;
+        }
+
+        .loan-table {
+            background-color: #21213a;
+            color: #eee;
+        }
+
+        .loan-table thead {
+            background-color: #0ff2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container container-box">
+        <h2 class="text-center mb-4">💰 Loans</h2>
+
+        <div class="text-end mb-3">
+            <a href="{{ url('/loan/create') }}" class="neon-btn">+ Add New Loan</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped loan-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Customer</th>
+                        <th>Amount (GHS)</th>
+                        <th>Status</th>
+                        <th>Date Issued</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($loans as $index => $loan)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $loan->customer->name ?? 'Unknown' }}</td>
+                            <td>{{ number_format($loan->amount, 2) }}</td>
+                            <td>
+                                @if ($loan->status === 'approved')
+                                    <span class="badge bg-success">Approved</span>
+                                @elseif ($loan->status === 'pending')
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                @else
+                                    <span class="badge bg-danger">Rejected</span>
+                                @endif
+                            </td>
+                            <td>{{ \Carbon\Carbon::parse($loan->created_at)->format('Y-m-d') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">No loans found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

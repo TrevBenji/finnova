@@ -47,3 +47,4 @@ class RegisteredUserController extends Controller
     // ✅ Redirect to /dashboard (or wherever you set RouteServiceProvider::HOME)
     return redirect(RouteServiceProvider::HOME); 
 }
+}

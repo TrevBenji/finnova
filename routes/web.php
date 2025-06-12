@@ -3,18 +3,18 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SettingsController;
-
+use App\Http\Controllers\DashboardController;
 Route::middleware(['auth', 'role:admin'])->post('/system-settings', [SettingsController::class, 'update'])->name('settings.update');
 
 Route::get('/', function () {
     return view('home'); // or 'landing' or whatever your hompage file is called
 });
-// Dashboard Route for Authenticated Users
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('dashboard');
+
+require __DIR__.'/auth.php'; // ✅ This line is critical!
 
 Route::get('/get-started', function () {
     return view('get-started');

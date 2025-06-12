@@ -31,9 +31,9 @@ RUN cp .env.example .env \
  && echo "DB_DATABASE=/tmp/laravel.db" >> .env \
  && echo "SESSION_DRIVER=file" >> .env
 
-# Fix permissions
+# Fix permissions (corrected)
 RUN mkdir -p bootstrap/cache storage \
- && chown -R www-data:www-data bootstrap cache storage
+ && chown -R www-data:www-data bootstrap/cache storage
 
 # ✅ Run Laravel setup
 RUN php artisan config:clear || true && \

@@ -33,6 +33,12 @@ RUN cp .env.example .env \
  && php artisan key:generate \
  && php artisan config:cache || true
 
+ # ✅ Clear Laravel cache/config to avoid 419/session issues
+RUN php artisan config:clear \
+ && php artisan cache:clear \
+ && php artisan route:clear \
+ && php artisan view:clear
+
 # Fix storage and cache permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 

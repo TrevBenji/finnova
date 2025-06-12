@@ -3,7 +3,7 @@ FROM php:8.2-apache
 # Install PHP extensions
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    git curl zip unzip libpng-dev libonig-dev libxml2-dev sqlite3 libzip-dev \
+    git curl zip unzip libpng-dev libonig-dev libxml2-dev libsqlite3-dev libzip-dev \
     && docker-php-ext-install pdo pdo_mysql pdo_sqlite mbstring bcmath exif gd
 
 # Enable mod_rewrite

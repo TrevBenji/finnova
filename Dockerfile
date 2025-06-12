@@ -21,23 +21,23 @@ COPY . .
 # Add Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# ✅ Install dependencies properly
-RUN composer install --no-dev --optimize-autoloader || exit 1
-
-# Set up basic .env for build (replace at runtime)
+# Copy .env and set basic env variables
 RUN cp .env.example .env \
-&& echo "APP_KEY=base64:ZccY7I0hsEiW7IGJ6JAL9jgc/l2TySLBFXocUhPAvuc=" >> .env \
+ && echo "APP_KEY=base64:ZccY7I0hsEiW7IGJ6JAL9jgc/l2TySLBFXocUhPAvuc=" >> .env \
  && echo "DB_CONNECTION=sqlite" >> .env \
  && echo "DB_DATABASE=/tmp/laravel.db" >> .env \
- && echo "SESSION_DRIVER=file" >> .env \
-# Set Laravel key and clear cache
-RUN cp .env.example .env \
- && php artisan key:generate \
+ && echo "SESSION_DRIVER=file" >> .env
+
+# Install composer dependencies
+RUN composer install --no-dev --optimize-autoloader || exit 1
+
+# Run artisan setup tasks
+RUN php artisan key:generate \
  && php artisan config:clear \
  && php artisan cache:clear \
  && php artisan route:clear \
  && php artisan view:clear \
- && php artisan config:cache
+ && php artisan config:cache || true
 
  #Check if vendor exists
 RUN ls -la /var/www/html/vendor || echo "Vendor folder not found"

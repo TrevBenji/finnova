@@ -42,12 +42,17 @@ RUN cp .env.example .env && \
 RUN mkdir -p storage/logs bootstrap/cache && \
     chown -R www-data:www-data storage bootstrap/cache
 
-# Run Laravel commands safely
-RUN php artisan key:generate && \
-    php artisan config:clear && \
-    php artisan cache:clear && \
-    php artisan route:clear && \
-    php artisan view:clear && \
-    php artisan config:cache
+# Create SQLite DB and log folder
+RUN touch /tmp/laravel.db && chmod 666 /tmp/laravel.db && \
+    mkdir -p storage/logs bootstrap/cache && \
+    chown -R www-data:www-data storage bootstrap/cache
+
+# Run Laravel Artisan commands with fallback
+RUN php artisan config:clear || true && \
+    php artisan key:generate || true && \
+    php artisan route:clear || true && \
+    php artisan view:clear || true && \
+    php artisan cache:clear || true && \
+    php artisan config:cache || true
 
 EXPOSE 80

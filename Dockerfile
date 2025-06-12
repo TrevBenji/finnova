@@ -29,15 +29,16 @@ RUN cp .env.example .env \
  && echo "DB_CONNECTION=sqlite" >> .env \
  && echo "DB_DATABASE=/tmp/laravel.db" >> .env \
  && echo "SESSION_DRIVER=file" >> .env \
- && composer install --no-dev --optimize-autoloader \
- && php artisan key:generate \
- && php artisan config:cache || true
+# Install Composer dependencies
+RUN composer install --no-dev --optimize-autoloader || true
 
- # ✅ Clear Laravel cache/config to avoid 419/session issues
-RUN php artisan config:clear \
+# Ensure Laravel is ready before running artisan
+RUN php artisan key:generate \
+ && php artisan config:clear \
  && php artisan cache:clear \
  && php artisan route:clear \
- && php artisan view:clear
+ && php artisan view:clear \
+ && php artisan config:cache || true
 
 # Fix storage and cache permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache

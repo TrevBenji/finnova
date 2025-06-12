@@ -8,20 +8,21 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Set the working directory
-WORKDIR /var/www/html
-
-# Copy Laravel app into container
-COPY . .
-
-# Set Apache to use the public directory
+# Set Apache public folder
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-
-# Update Apache's config to point to public folder
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf
 
-# Install Composer (from official image)
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy project into container
+COPY . .
+
+# Add Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# ✅ Install dependencies properly
+RUN composer install --no-dev --optimize-autoloader || exit 1
 
 # Set up basic .env for build (replace at runtime)
 RUN cp .env.example .env \
@@ -29,21 +30,19 @@ RUN cp .env.example .env \
  && echo "DB_CONNECTION=sqlite" >> .env \
  && echo "DB_DATABASE=/tmp/laravel.db" >> .env \
  && echo "SESSION_DRIVER=file" >> .env \
-# Install Composer dependencies
-RUN composer install --no-dev --optimize-autoloader || true
-
-#Check if vendor exists
-RUN ls -la /var/www/html/vendor || echo "Vendor folder not found"
-
-# Ensure Laravel is ready before running artisan
-RUN php artisan key:generate \
+# Set Laravel key and clear cache
+RUN cp .env.example .env \
+ && php artisan key:generate \
  && php artisan config:clear \
  && php artisan cache:clear \
  && php artisan route:clear \
  && php artisan view:clear \
- && php artisan config:cache || true
+ && php artisan config:cache
 
-# Fix storage and cache permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+ #Check if vendor exists
+RUN ls -la /var/www/html/vendor || echo "Vendor folder not found"
+
+# Set permissions
+RUN chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 80

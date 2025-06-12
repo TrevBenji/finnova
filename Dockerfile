@@ -32,6 +32,9 @@ RUN cp .env.example .env \
 # Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader || true
 
+#Check if vendor exists
+RUN ls -la /var/www/html/vendor || echo "Vendor folder not found"
+
 # Ensure Laravel is ready before running artisan
 RUN php artisan key:generate \
  && php artisan config:clear \

@@ -30,10 +30,7 @@ RUN cp .env.example .env \
  && echo "DB_CONNECTION=sqlite" >> .env \
  && echo "DB_DATABASE=/tmp/laravel.db" >> .env \
  && echo "SESSION_DRIVER=file" >> .env
-
- # Create required folders
-RUN mkdir -p storage/logs bootstrap/cache
-
+ 
 # Fix permissions so Laravel can write logs
 RUN chown -R www-data:www-data storage bootstrap/cache
 
@@ -43,22 +40,23 @@ RUN touch /tmp/laravel.db \
 
  COPY . .
 
+# Laravel .env config
 RUN cp .env.example .env \
  && echo "APP_ENV=production" >> .env \
  && echo "APP_DEBUG=false" >> .env \
  && echo "APP_KEY=base64:ZccY7I0hsEiW7IGJ6JAL9jgc/l2TySLBFXocUhPAvuc=" >> .env \
  && echo "DB_CONNECTION=sqlite" >> .env \
  && echo "DB_DATABASE=/tmp/laravel.db" >> .env \
- && echo "SESSION_DRIVER=file" >> .env
+ && echo "SESSION_DRIVER=file" >> .env \
+ && echo "CACHE_DRIVER=file" >> .env
 
-# Create SQLite DB and required Laravel folders
+# Create the SQLite database and fix folder permissions
 RUN touch /tmp/laravel.db \
  && chmod 666 /tmp/laravel.db \
  && mkdir -p storage/logs bootstrap/cache \
  && chown -R www-data:www-data storage bootstrap/cache
 
-RUN composer install --no-dev --optimize-autoloader
-
+# Run Laravel setup
 RUN php artisan key:generate \
  && php artisan config:clear \
  && php artisan cache:clear \
